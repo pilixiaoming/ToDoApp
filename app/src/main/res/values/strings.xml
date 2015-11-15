@@ -2,4 +2,7 @@
     <string name="app_name">ToDoApp</string>
     <string name="addButtonText">Add new item</string>
     <string name="tvAddNewItem">Item Name</string>
+    <string name="title_activity_edit_item">EditItemActivity</string>
+    <string name="editItemTitle">Edit Item Here</string>
+    <string name="btnEditItem">Submit</string>
 </resources>
