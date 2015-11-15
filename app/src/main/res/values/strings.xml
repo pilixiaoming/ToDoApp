@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="addButtonText">Add new item</string>
+    <string name="tvAddNewItem">Item Name</string>
+</resources>
