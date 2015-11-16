@@ -5,37 +5,42 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
+
+import com.jijiyan.todoapp.Adapter.ItemAdapter;
+import com.jijiyan.todoapp.model.Item;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> items;//data
-    ArrayAdapter<String> itemsAdapter;
+    ArrayList<Item> items;//data
+    //ArrayAdapter<String> itemsAdapter;
+    ItemAdapter itemAdapter;
     ListView lvItems;
-    EditText etNewItem;
-    private final int REQUEST_CODE = 20;
+    private final int REQUEST_CODE_EDIT = 20;
+    private final int REQUEST_CODE_ADD = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initData();
-        etNewItem = (EditText)findViewById(R.id.etNewItem);
         setupListViewListener();
     }
 
     private void initData() {
         lvItems = (ListView)findViewById(R.id.lvItems);
-        items = new ArrayList<String>();
-        items.add("item 1");
-        items.add("item 2");
-        items.add("item 3");
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,items);
-        lvItems.setAdapter(itemsAdapter);
+
+        Item item1 = new Item("Item1", "Item1 Note", "Item1 Description");
+        Item item2 = new Item("Item2", "Item2 Note", "Item2 Description");
+        Item item3 = new Item("Item3", "Item3 Note", "Item3 Description");
+        items = new ArrayList<Item>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+        itemAdapter = new ItemAdapter(this, items);
+        lvItems.setAdapter(itemAdapter);
     }
 
     private void setupListViewListener(){
@@ -43,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 items.remove(position);
-                itemsAdapter.notifyDataSetChanged();
+                itemAdapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -52,31 +57,49 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                String itemName = lvItems.getItemAtPosition(position).toString();
-                i.putExtra("ItemName", itemName);
+                Item item = (Item)lvItems.getItemAtPosition(position);
+                i.putExtra("ItemName", item.name);
+                i.putExtra("ItemNote", item.note);
+                i.putExtra("ItemDescription", item.description);
                 i.putExtra("ItemPos", position);
-                startActivityForResult(i, REQUEST_CODE); // brings up the second activity
+                startActivityForResult(i, REQUEST_CODE_EDIT); // brings up the second activity
             }
         });
     }
 
     public void onAddItem(View view) {
-        itemsAdapter.add(etNewItem.getText().toString());
-        etNewItem.setText("");
+        Intent i = new Intent(MainActivity.this, AddItemActivity.class);
+        startActivityForResult(i, REQUEST_CODE_ADD); // brings up the second activity
     }
-
 
     // ActivityOne.java, time to handle the result of the sub-activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_EDIT) {
             // Extract name value from result extras
-            String ItemName = data.getExtras().getString("ItemName");
+            String itemName = data.getExtras().getString("ItemName");
+            String itemNote = data.getExtras().getString("ItemNote");
+            String itemDescription = data.getExtras().getString("ItemDescription");
             int pos = data.getExtras().getInt("ItemPos", 0);
             // Toast the name to display temporarily on screen
-            items.set(pos, ItemName);
-            itemsAdapter.notifyDataSetChanged();
+            Item item = (Item)lvItems.getItemAtPosition(pos);
+            item.name = itemName;
+            item.note = itemNote;
+            item.description = itemDescription;
+            items.set(pos, item);
+            itemAdapter.notifyDataSetChanged();
+        }
+
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_ADD) {
+            // Extract name value from result extras
+            String itemName = data.getExtras().getString("ItemName");
+            String itemNote = data.getExtras().getString("ItemNote");
+            String itemDescription = data.getExtras().getString("ItemDescription");
+            // Toast the name to display temporarily on screen
+            Item item = new Item(itemName,itemNote,itemDescription);
+            items.add(item);
+            itemAdapter.notifyDataSetChanged();
         }
     }
 }

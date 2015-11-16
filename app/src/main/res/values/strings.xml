@@ -5,4 +5,10 @@
     <string name="title_activity_edit_item">EditItemActivity</string>
     <string name="editItemTitle">Edit Item Here</string>
     <string name="btnEditItem">Submit</string>
+    <string name="itemNameLabel">Name</string>
+    <string name="ItemNoteLabel">Note</string>
+    <string name="ItemDescriptionLabel">Description</string>
+    <string name="ItemListLabel">Item List</string>
+    <string name="AddItemTitle">Add New Item</string>
+    <string name="btnSubmitLabel">Submit</string>
 </resources>
