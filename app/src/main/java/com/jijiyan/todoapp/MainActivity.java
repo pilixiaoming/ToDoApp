@@ -35,31 +35,17 @@ public class MainActivity extends AppCompatActivity {
         ItemDBHelper itemDBHelper = ItemDBHelper.getInstance(this);
         items.addAll(itemDBHelper.getItems());
         lvItems = (ListView)findViewById(R.id.lvItems);
-//
-//        Item item1 = new Item("Item1", "Item1 Note", "Item1 Description");
-//        Item item2 = new Item("Item2", "Item2 Note", "Item2 Description");
-//        Item item3 = new Item("Item3", "Item3 Note", "Item3 Description");
-//        items = new ArrayList<Item>();
-//        items.add(item1);
-//        items.add(item2);
-//        items.add(item3);
-
-
         itemAdapter = new ItemAdapter(this, items);
         lvItems.setAdapter(itemAdapter);
-    }
-
-    private void removeItem(Item item){
-        ItemDBHelper.getInstance(this).deleteItem(item);
     }
 
     private void setupListViewListener(){
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                items.remove(position);
                 Item item = (Item)lvItems.getItemAtPosition(position);
-                removeItem(item);
+                items.remove(item);
+                ItemDBHelper.getInstance(MainActivity.this).deleteItem(item);
                 itemAdapter.notifyDataSetChanged();
                 return true;
             }

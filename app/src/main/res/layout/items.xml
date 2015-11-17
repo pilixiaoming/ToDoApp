@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:maxLength="20"
-        android:text ="sdfsad"/>
+        android:text ="place holder"/>
 
     <TextView
         android:id="@+id/tvItemNote"
@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:maxLength="25"
-        android:text ="sdsdf  a sd sdaff saf a faf  adsfg adf adfv gda ag afa adfg afds"/>
+        android:text ="place holder"/>
 
 </RelativeLayout>
