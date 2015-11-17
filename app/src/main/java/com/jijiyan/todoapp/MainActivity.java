@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.jijiyan.todoapp.adapter.ItemAdapter;
+import com.jijiyan.todoapp.adapter1.ItemAdapter;
 import com.jijiyan.todoapp.model.Item;
 import com.jijiyan.todoapp.sqlite.ItemDBHelper;
 
