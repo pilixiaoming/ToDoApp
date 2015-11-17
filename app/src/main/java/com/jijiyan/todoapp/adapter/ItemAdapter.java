@@ -1,4 +1,4 @@
-package com.jijiyan.todoapp.adapter1;
+package com.jijiyan.todoapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
