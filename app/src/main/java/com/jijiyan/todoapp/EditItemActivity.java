@@ -39,7 +39,7 @@ public class EditItemActivity extends AppCompatActivity {
         data.putExtra("ItemName", etEditItemName.getText().toString());
         data.putExtra("ItemNote", etEditItemNote.getText().toString());
         data.putExtra("ItemDescription", etEditItemDescription.getText().toString());
-        data.putExtra("ItemPos", getIntent().getIntExtra("ItemPos", 0)); // ints work too
+        data.putExtra("ItemPos", getIntent().getIntExtra("ItemPos", 0));
         // Activity finished ok, return the data
         setResult(RESULT_OK, data); // set result code and bundle data for response
         finish(); // closes the activity, pass data to parent

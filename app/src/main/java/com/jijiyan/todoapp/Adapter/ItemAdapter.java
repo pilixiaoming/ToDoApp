@@ -1,4 +1,4 @@
-package com.jijiyan.todoapp.Adapter;
+package com.jijiyan.todoapp.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,10 +10,10 @@ import android.widget.TextView;
 import com.jijiyan.todoapp.R;
 import com.jijiyan.todoapp.model.Item;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
-    public ItemAdapter(Context context, ArrayList<Item> items) {
+    public ItemAdapter(Context context, List<Item> items) {
         super(context, 0, items);
     }
 
@@ -29,8 +29,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView tvItemName = (TextView) convertView.findViewById(R.id.tvItemName);
         TextView tvItemNote = (TextView) convertView.findViewById(R.id.tvItemNote);
         // Populate the data into the template view using the data object
-        tvItemName.setText(item.name);
-        tvItemNote.setText(item.note);
+        tvItemName.setText(item.getName());
+        tvItemNote.setText(item.getNote());
         // Return the completed view to render on screen
         return convertView;
     }

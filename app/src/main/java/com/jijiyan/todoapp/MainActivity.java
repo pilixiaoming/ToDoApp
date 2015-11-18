@@ -7,14 +7,16 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.jijiyan.todoapp.Adapter.ItemAdapter;
+import com.jijiyan.todoapp.adapter.ItemAdapter;
 import com.jijiyan.todoapp.model.Item;
+import com.jijiyan.todoapp.sqlite.ItemDBHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Item> items;//data
+    List<Item> items = new ArrayList<Item>();//data
     //ArrayAdapter<String> itemsAdapter;
     ItemAdapter itemAdapter;
     ListView lvItems;
@@ -30,17 +32,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initData() {
+        ItemDBHelper itemDBHelper = ItemDBHelper.getInstance(this);
+        items.addAll(itemDBHelper.getItems());
         lvItems = (ListView)findViewById(R.id.lvItems);
+//
+//        Item item1 = new Item("Item1", "Item1 Note", "Item1 Description");
+//        Item item2 = new Item("Item2", "Item2 Note", "Item2 Description");
+//        Item item3 = new Item("Item3", "Item3 Note", "Item3 Description");
+//        items = new ArrayList<Item>();
+//        items.add(item1);
+//        items.add(item2);
+//        items.add(item3);
 
-        Item item1 = new Item("Item1", "Item1 Note", "Item1 Description");
-        Item item2 = new Item("Item2", "Item2 Note", "Item2 Description");
-        Item item3 = new Item("Item3", "Item3 Note", "Item3 Description");
-        items = new ArrayList<Item>();
-        items.add(item1);
-        items.add(item2);
-        items.add(item3);
+
         itemAdapter = new ItemAdapter(this, items);
         lvItems.setAdapter(itemAdapter);
+    }
+
+    private void removeItem(Item item){
+        ItemDBHelper.getInstance(this).deleteItem(item);
     }
 
     private void setupListViewListener(){
@@ -48,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 items.remove(position);
+                Item item = (Item)lvItems.getItemAtPosition(position);
+                removeItem(item);
                 itemAdapter.notifyDataSetChanged();
                 return true;
             }
@@ -58,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, EditItemActivity.class);
                 Item item = (Item)lvItems.getItemAtPosition(position);
-                i.putExtra("ItemName", item.name);
-                i.putExtra("ItemNote", item.note);
-                i.putExtra("ItemDescription", item.description);
+                i.putExtra("ItemName", item.getName());
+                i.putExtra("ItemNote", item.getNote());
+                i.putExtra("ItemDescription", item.getDescription());
                 i.putExtra("ItemPos", position);
                 startActivityForResult(i, REQUEST_CODE_EDIT); // brings up the second activity
             }
@@ -76,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
+        ItemDBHelper itemDBHelper = ItemDBHelper.getInstance(this);
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_EDIT) {
             // Extract name value from result extras
             String itemName = data.getExtras().getString("ItemName");
@@ -84,10 +97,11 @@ public class MainActivity extends AppCompatActivity {
             int pos = data.getExtras().getInt("ItemPos", 0);
             // Toast the name to display temporarily on screen
             Item item = (Item)lvItems.getItemAtPosition(pos);
-            item.name = itemName;
-            item.note = itemNote;
-            item.description = itemDescription;
+            item.setName(itemName);
+            item.setNote(itemNote);
+            item.setDescription(itemDescription);
             items.set(pos, item);
+            itemDBHelper.updateItem(item);
             itemAdapter.notifyDataSetChanged();
         }
 
@@ -99,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
             // Toast the name to display temporarily on screen
             Item item = new Item(itemName,itemNote,itemDescription);
             items.add(item);
+            itemDBHelper.addItem(item);
             itemAdapter.notifyDataSetChanged();
         }
     }
